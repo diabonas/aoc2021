@@ -23,24 +23,25 @@ def parse_packets(message):
         packet["value"] = int(value, 2)
     else:  # operator packet
         length_type_id = message[6]
-        if length_type_id == "0":
-            HEADER_LENGTH = 3 + 3 + 1 + 15  # version, type ID, length type ID, length
-            total_subpacket_length = int(message[7:HEADER_LENGTH], 2)
-            packet["length"] = HEADER_LENGTH
-            while packet["length"] != HEADER_LENGTH + total_subpacket_length:
-                subpacket = parse_packets(message[packet["length"] :])
-                packet["subpackets"].append(subpacket)
-                packet["length"] += subpacket["length"]
-        elif length_type_id == "1":
-            HEADER_LENGTH = 3 + 3 + 1 + 11  # version type ID, length type ID, length
-            num_subpackets = int(message[7:HEADER_LENGTH], 2)
-            packet["length"] = HEADER_LENGTH
-            for s in range(num_subpackets):
-                subpacket = parse_packets(message[packet["length"] :])
-                packet["subpackets"].append(subpacket)
-                packet["length"] += subpacket["length"]
-        else:
-            raise Exception("unknown length type ID", length_type_id)
+        match length_type_id:
+            case "0":
+                HEADER_LENGTH = 3 + 3 + 1 + 15  # version, type ID, length type ID, length
+                total_subpacket_length = int(message[7:HEADER_LENGTH], 2)
+                packet["length"] = HEADER_LENGTH
+                while packet["length"] != HEADER_LENGTH + total_subpacket_length:
+                    subpacket = parse_packets(message[packet["length"] :])
+                    packet["subpackets"].append(subpacket)
+                    packet["length"] += subpacket["length"]
+            case "1":
+                HEADER_LENGTH = 3 + 3 + 1 + 11  # version type ID, length type ID, length
+                num_subpackets = int(message[7:HEADER_LENGTH], 2)
+                packet["length"] = HEADER_LENGTH
+                for s in range(num_subpackets):
+                    subpacket = parse_packets(message[packet["length"] :])
+                    packet["subpackets"].append(subpacket)
+                    packet["length"] += subpacket["length"]
+            case _:
+                raise Exception("unknown length type ID", length_type_id)
 
     return packet
 

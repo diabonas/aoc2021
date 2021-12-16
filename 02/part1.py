@@ -10,13 +10,14 @@ with open("input", "r") as file:
 horizontal = 0
 depth = 0
 for c in commands:
-    if c["direction"] == "forward":
-        horizontal += c["distance"]
-    elif c["direction"] == "down":
-        depth += c["distance"]
-    elif c["direction"] == "up":
-        depth -= c["distance"]
-    else:
-        raise Exception("invalid direction", c)
+    match c["direction"]:
+        case "forward":
+            horizontal += c["distance"]
+        case "down":
+            depth += c["distance"]
+        case "up":
+            depth -= c["distance"]
+        case _:
+            raise Exception("invalid direction", c)
 
 print("product of final horizontal position and depth: %i" % (horizontal * depth))

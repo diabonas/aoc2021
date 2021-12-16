@@ -11,14 +11,15 @@ horizontal = 0
 depth = 0
 aim = 0
 for c in commands:
-    if c["direction"] == "forward":
-        horizontal += c["distance"]
-        depth += aim * c["distance"]
-    elif c["direction"] == "down":
-        aim += c["distance"]
-    elif c["direction"] == "up":
-        aim -= c["distance"]
-    else:
-        raise Exception("invalid direction", c)
+    match c["direction"]:
+        case "forward":
+            horizontal += c["distance"]
+            depth += aim * c["distance"]
+        case "down":
+            aim += c["distance"]
+        case "up":
+            c["distance"]
+        case _:
+            raise Exception("invalid direction", c)
 
 print("product of final horizontal position and depth: %i" % (horizontal * depth))

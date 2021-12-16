@@ -31,20 +31,21 @@ for dot in dots:
     paper[dot[1], dot[0]] = True
 
 for instruction in instructions:
-    if instruction["direction"] == "x":
-        assert not np.any(paper[:, instruction["line"]])
+    match instruction["direction"]:
+        case "x":
+            assert not np.any(paper[:, instruction["line"]])
 
-        # The instructions always seem to fold the paper in half, otherwise some
-        # padding would need to be applied to the smaller side
-        assert instruction["line"] == np.shape(paper)[1] // 2
+            # The instructions always seem to fold the paper in half, otherwise some
+            # padding would need to be applied to the smaller side
+            assert instruction["line"] == np.shape(paper)[1] // 2
 
-        paper = paper[:, : instruction["line"]] | paper[:, : instruction["line"] : -1]
-    elif instruction["direction"] == "y":
-        assert not np.any(paper[instruction["line"], :])
-        assert instruction["line"] == np.shape(paper)[0] // 2
-        paper = paper[: instruction["line"], :] | paper[: instruction["line"] : -1, :]
-    else:
-        raise Exception("invalid direction", instruction["direction"])
+            paper = paper[:, : instruction["line"]] | paper[:, : instruction["line"] : -1]
+        case "y":
+            assert not np.any(paper[instruction["line"], :])
+            assert instruction["line"] == np.shape(paper)[0] // 2
+            paper = paper[: instruction["line"], :] | paper[: instruction["line"] : -1, :]
+        case _:
+            raise Exception("invalid direction", instruction["direction"])
 
 print("folded paper:")
 for row in paper:
