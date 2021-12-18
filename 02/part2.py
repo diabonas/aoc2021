@@ -18,7 +18,7 @@ for c in commands:
         case "down":
             aim += c["distance"]
         case "up":
-            c["distance"]
+            aim -= c["distance"]
         case _:
             raise Exception("invalid direction", c)
 
