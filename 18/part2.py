@@ -143,10 +143,9 @@ with open("input", "r") as file:
     numbers = [json.loads(line) for line in file]
 
 max_magnitude = 0
-for pair in itertools.combinations(numbers, 2):
+for pair in itertools.permutations(numbers, 2):
     max_magnitude = max(
         magnitude(add(pair[0], pair[1])),
-        magnitude(add(pair[1], pair[0])),
         max_magnitude,
     )
 
