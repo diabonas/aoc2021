@@ -14,8 +14,9 @@ with open("input", "r") as file:
 # The value that the rest of the infinite image is filled with
 infinite_value = "."
 
+input_image = np.pad(input_image, 1, "constant", constant_values=infinite_value)
 for step in range(STEPS):
-    input_image = np.pad(input_image, 2, "constant", constant_values=infinite_value)
+    input_image = np.pad(input_image, 1, "constant", constant_values=infinite_value)
     output_image = np.copy(input_image)
     for row in range(1, len(input_image) - 1):
         for column in range(1, len(input_image[row]) - 1):
