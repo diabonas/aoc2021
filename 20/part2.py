@@ -26,8 +26,8 @@ for step in range(STEPS):
             number = int(number, 2)
             output_image[row][column] = algorithm[number]
 
-    # The rest of the infinite image oscillates between algorithm[0] and
-    # algorithm[511]
+    # In the rest of the infinite image, all pixels are surrounded by the same
+    # of their kind, so they change to either algorithm[0] or algorithm[511]
     infinite_value = algorithm[
         int(infinite_value.replace(".", "0").replace("#", "1") * 9, 2)
     ]
@@ -35,6 +35,9 @@ for step in range(STEPS):
     output_image[:, [0, -1]] = infinite_value
 
     input_image = output_image
+
+# There should be only finitely many lit pixels after the last step
+assert infinite_value == "."
 
 print(
     "number of lit pixels in the output image: %i"
