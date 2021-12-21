@@ -24,6 +24,11 @@ def winning_games(positions, scores=(0, 0)):
     assert max(scores) < WINNING_SCORE
 
     winning = (0, 0)
+    # Summing up the dice and iterating over the sum (from 3 to 9), multiplying
+    # the won games by the time these sums can appear (1,3,6,7,6,3,1), makes it
+    # possible to run the recursion in a couple of seconds even without
+    # memoisation. However since we are using functools.cache, the program
+    # returns almost instantly anyway.
     for dice in itertools.product(range(1, 4), repeat=3):
         position_new = positions[0] + sum(dice)
         if position_new % 10 == 0:
