@@ -3,6 +3,7 @@
 
 import itertools
 import re
+from functools import cache
 
 WINNING_SCORE = 21
 
@@ -16,9 +17,9 @@ with open("input", "r") as file:
         starting_spaces[player] = int(match.group(2))
 starting_spaces = tuple(starting_spaces)
 
-won_games = {}
 # Returns in how many universes each player wins if they are at their current
 # positions and scores if it is the first player's turn
+@cache
 def winning_games(positions, scores=(0, 0)):
     assert max(scores) < WINNING_SCORE
 
@@ -37,18 +38,13 @@ def winning_games(positions, scores=(0, 0)):
         else:
             # Switch the first and second player because it is now the other
             # player's turn
-            new_situation = (positions_new[::-1], scores_new[::-1])
-            if new_situation not in won_games:
-                won_games[new_situation] = winning_games(*new_situation)
-            winning = (
-                winning[0] + won_games[new_situation][1],
-                winning[1] + won_games[new_situation][0],
-            )
+            won = winning_games(positions_new[::-1], scores_new[::-1])
+            winning = (winning[0] + won[1], winning[1] + won[0])
 
     return winning
 
 
 print(
-    "number of won games by the most successful player: %i"
+    "number of games won by the most successful player: %i"
     % max(winning_games(starting_spaces))
 )
